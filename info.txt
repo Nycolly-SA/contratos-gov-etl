@@ -1,3 +1,0 @@
-https://dadosabertos.compras.gov.br/modulo-contratos/1_consultarContratos
-
-https://dadosabertos.compras.gov.br/modulo-contratos/2_consultarContratosItem

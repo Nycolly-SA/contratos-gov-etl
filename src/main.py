@@ -1,4 +1,4 @@
-from extract import extract_contratos, extract_uasg, extract_orgao
+from extract import extract_contratos_por_trimestre, extract_uasg, extract_orgao
 import time
 from datetime import datetime
 
@@ -13,30 +13,39 @@ def main():
     print("\n=== FASE DE EXTRAÇÃO ===")
     inicio_extracao = time.time()
     
-    # Extraindo dados de contratos com limite específico
-    print("\n>> Extraindo dados de contratos...")
-    contratos_df = extract_contratos(max_records=10000, save=True)
+    # Extraindo dados de contratos estratificados por trimestre
+    print("\n>> Extraindo dados de contratos com amostragem por trimestre...")
+    contratos_por_trimestre = 3000  # 3.000 contratos por trimestre (total: 12.000)
+    contratos_df = extract_contratos_por_trimestre(contratos_por_trimestre=contratos_por_trimestre, save=True)
     
     # Extraindo todos os dados de UASG e Órgãos
     print("\n>> Extraindo dados de UASGs...")
     uasg_df = extract_uasg(max_records=None, save=True)
-    
     print("\n>> Extraindo dados de Órgãos...")
     orgao_df = extract_orgao(max_records=None, save=True)
     
     fim_extracao = time.time()
     tempo_extracao = round((fim_extracao - inicio_extracao) / 60, 2)
     
-    # Resumo da extração
     print("\n=== RESUMO DA EXTRAÇÃO ===")
-    print(f"Contratos: {len(contratos_df):,} registros (limitado a 10.000)")
-    print(f"Colunas: {contratos_df.columns.tolist()}")
+    print(f"Contratos: {len(contratos_df):,} registros (amostra estratificada por trimestre)")
+    
+    # Exibir distribuição por trimestre para confirmação
+    try:
+        distribuicao = contratos_df['trimestre'].value_counts().sort_index()
+        print("\nDistribuição de contratos por trimestre:")
+        for trim, count in distribuicao.items():
+            print(f"Trimestre {trim}: {count:,} contratos")
+    except:
+        print("Não foi possível exibir a distribuição por trimestre.")
+    
+    print(f"\nColunas: {', '.join(sorted(contratos_df.columns.tolist())[:10])}...")
     
     print(f"\nUASGs: {len(uasg_df):,} registros (todos disponíveis)")
-    print(f"Colunas: {uasg_df.columns.tolist()}")
+    print(f"Colunas: {', '.join(sorted(uasg_df.columns.tolist())[:10])}...")
     
     print(f"\nÓrgãos: {len(orgao_df):,} registros (todos disponíveis)")
-    print(f"Colunas: {orgao_df.columns.tolist()}")
+    print(f"Colunas: {', '.join(sorted(orgao_df.columns.tolist())[:10])}...")
     
     print(f"\nTempo de extração: {tempo_extracao} minutos")
     print("\n=== Extração concluída com sucesso! ===")

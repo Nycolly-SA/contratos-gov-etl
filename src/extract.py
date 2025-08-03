@@ -71,7 +71,7 @@ def extract_data(url, endpoint, max_records=10000, params=None, max_retries=3):
         for retry in range(max_retries):
             try:
                 print(f"Extraindo página {current_page}/{max_pages}...")
-                response = requests.get(url + endpoint, params=params_copy, timeout=15)
+                response = requests.get(url + endpoint, params=params_copy, timeout=20)
                 response.raise_for_status()  # Levanta um erro para códigos de status HTTP 4xx/5xx
                 data = response.json()
 
@@ -116,23 +116,44 @@ def extract_data(url, endpoint, max_records=10000, params=None, max_retries=3):
     return all_data
 
 def save_to_csv(data, filename, directory=data_dir):
-    # Salva os dados extraídos em um arquivo CSV e retorna o DataFrame
     """
+    Salva os dados em um arquivo CSV e retorna o DataFrame
+    
     Args:
-        data: Lista de dicionários com os dados a serem salvos
+        data: Lista de dicionários ou DataFrame a ser salvo
         filename: Nome do arquivo CSV (sem extensão)
         directory: Diretório onde o arquivo será salvo
     """
-    if not data:
-        print("Nenhum dado para salvar em {filename}")
-        return pd.DataFrame()
-    df = pd.DataFrame(data)
+    # Verifica se os dados já estão em um DataFrame ou se precisam ser convertidos
+    if isinstance(data, pd.DataFrame):
+        df = data
+    else:
+        # Se for uma lista vazia ou None
+        if not data:
+            print(f"Nenhum dado para salvar em {filename}")
+            return pd.DataFrame()
+        df = pd.DataFrame(data)
+    
     file_path = directory / filename
     df.to_csv(file_path, index=False, encoding='utf-8')
     print(f"Dados salvos em {file_path} ({len(df)} registros)")
     return df
 
-def extract_contratos(max_records=10000, save=True):
+def extract_contratos_simples(max_records=10000, save=True):
+    """
+    Extrai dados de contratos sem estratificação temporal.
+    
+    Nota: Esta função fornece uma extração simples, mas no fluxo principal
+    utilizamos a função extract_contratos_por_trimestre() para garantir 
+    representatividade temporal dos dados.
+
+    Args:
+        max_records: Número máximo de registros a extrair
+        save: Se True, salva os dados em CSV
+    Returns:
+        DataFrame com os contratos extraídos
+    """
+    
     params = {
     'tamanhoPagina': 500, #min é 10; max é 500
     'dataVigenciaInicialMin': '2024-01-01',
@@ -150,6 +171,68 @@ def extract_contratos(max_records=10000, save=True):
     if save:
         return save_to_csv(contratos_data, f"contratos_{timestamp}.csv")
     return pd.DataFrame(contratos_data)
+
+def extract_contratos_por_trimestre(ano=2024, contratos_por_trimestre=3000, save=True):
+    """
+    Extrai uma quantidade específica de contratos para cada trimestre do ano.
+    Estratégia de amostragem temporal para manter representatividade.
+    
+    Args:
+        ano: Ano de referência
+        contratos_por_trimestre: Quantidade de contratos a extrair por trimestre
+        save: Se True, salva os dados em CSV
+    Returns:
+        DataFrame com os contratos extraídos
+    """
+    todos_contratos = []
+    
+    # Define os trimestres
+    trimestres = [
+        ("01-01", "03-31", "T1"),  # 1º trimestre
+        ("04-01", "06-30", "T2"),  # 2º trimestre
+        ("07-01", "09-30", "T3"),  # 3º trimestre
+        ("10-01", "12-31", "T4")   # 4º trimestre
+    ]
+    
+    for inicio_dia, fim_dia, nome_trim in trimestres:
+        data_inicio = f"{ano}-{inicio_dia}"
+        data_fim = f"{ano}-{fim_dia}"
+        
+        print(f"Extraindo contratos do {nome_trim}/{ano} ({data_inicio} a {data_fim})...")
+        
+        params = {
+            'tamanhoPagina': 500,
+            'dataVigenciaInicialMin': data_inicio,
+            'dataVigenciaInicialMax': data_fim,
+        }
+        
+        contratos_trimestre = extract_data(url, endpoint_contratos, max_records=contratos_por_trimestre, params=params)
+        
+        todos_contratos.extend(contratos_trimestre)
+        print(f"Extraídos {len(contratos_trimestre)} contratos do {nome_trim}/{ano}")
+    
+    # Converter para DataFrame aqui, antes do if save:
+    df = pd.DataFrame(todos_contratos)
+    
+    # Verificar distribuição por trimestre
+    if len(df) > 0:
+        try:
+            df['data_inicio'] = pd.to_datetime(df['dataVigenciaInicial'])
+            df['trimestre'] = df['data_inicio'].dt.quarter
+            
+            contagem = df['trimestre'].value_counts().sort_index()
+            
+            print("\nVerificação da distribuição por trimestre:")
+            for trim, count in contagem.items():
+                print(f"Trimestre {trim}: {count} contratos")
+        except Exception as e:
+            print(f"Não foi possível verificar a distribuição: {e}")
+    
+    # Usar o DataFrame já criado para salvar e retornar
+    timestamp = datetime.now().strftime('%Y-%m-%d')
+    if save:
+        return save_to_csv(df, f"contratos_amostra_{timestamp}.csv")
+    return df
 
 def extract_uasg(max_records=None, save=True):
     """
@@ -209,20 +292,20 @@ def extract_orgao(max_records=None, save=True):
 
 # Execução direta para testes
 if __name__ == "__main__":
-    # Definir os limites de registros para testes
-    # Usar None para extrair todos os registros disponíveis
-    limite_contratos = 100
-    limite_uasg = 100
-    limite_orgao = 100
-    
+    # Amostra reduzida para teste
+    limite_uasg = 500
+    limite_orgao = 500
+    contratos_por_trimestre = 100
+    print("MODO TESTE: Usando amostra reduzida de dados")
+
     print("Iniciando extração de dados...")
     
-    # Extração  dos dados com os limites definidos
-    contratos_df = extract_contratos(max_records=limite_contratos)
+    # Extração dos dados
     uasg_df = extract_uasg(max_records=limite_uasg)
     orgao_df = extract_orgao(max_records=limite_orgao)
+    contratos_df = extract_contratos_por_trimestre(contratos_por_trimestre=contratos_por_trimestre)
     
-    print("\nResumo da extração:")
-    print(f"Contratos: {len(contratos_df):,} registros (limite: {limite_contratos})")
-    print(f"UASGs: {len(uasg_df):,} registros (limite: {limite_uasg if limite_uasg else 'todos'})")
-    print(f"Órgãos: {len(orgao_df):,} registros (limite: {limite_orgao if limite_orgao else 'todos'})")
+    print("\nExtração concluída!")
+    print(f"Contratos: {len(contratos_df)} registros")
+    print(f"UASGs: {len(uasg_df)} registros")
+    print(f"Órgãos: {len(orgao_df)} registros")

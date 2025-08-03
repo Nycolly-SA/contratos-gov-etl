@@ -4,19 +4,15 @@ from pathlib import Path
 from datetime import datetime
 import requests
 
-url = 'https://dadosabertos.compras.gov.br/modulo-contratos/'
-endpoint_contratos = '1_consultarContratos'
-endpoint_contratos_itens = '2_consultarContratosItem'
+url = 'https://dadosabertos.compras.gov.br/'
+# Endpoints para extração de dados
+endpoint_contratos = 'modulo-contratos/1_consultarContratos'
+endpoint_uasg = 'modulo-uasg/1_consultarUasg'
+endpoint_orgao = 'modulo-uasg/2_consultarOrgao'
 
 # Criação de diretórios para salvar os dados (se não existirem)
 data_dir = Path('data/raw')
 data_dir.mkdir(parents=True, exist_ok=True)
-
-default_params = {
-    'tamanhoPagina': 500, #min é 10; max é 500
-    'dataVigenciaInicialMin': '2024-01-01',
-    'dataVigenciaInicialMax': '2024-12-31',
-}
 
 # Função geral para extrair dados de um endpoint específico da API
 def extract_data(url, endpoint, max_records=10000, params=None, max_retries=3):
@@ -26,19 +22,42 @@ def extract_data(url, endpoint, max_records=10000, params=None, max_retries=3):
         url: URL base da API
         endpoint: Endpoint específico a ser consultado
         max_records: Número máximo de registros a serem extraídos
-        params: Parâmetros da consulta (opcional). Se None, usa default_params.
+        params: Parâmetros da consulta (opcional). Se None, usa parâmetros padrão.
+        max_retries: Número máximo de tentativas em caso de falha
+    Returns:
+        Lista de dicionários com os dados extraídos
     """
-    # Se nenhum parâmetro for fornecido, usa os parâmetros padrão
+
+     # Se nenhum parâmetro for fornecido, inicializa um dicionário vazio
     if params is None:
-        params = default_params.copy()
+        params = {}
+    
+    # Define página inicial se não estiver presente
+    if 'pagina' not in params:
+        params['pagina'] = 1
+    
+    # Define a paginação com base no endpoint
+    if endpoint == endpoint_contratos:
+        # Para o endpoint de contratos, usa tamanhoPagina
+        if 'tamanhoPagina' not in params:
+            params['tamanhoPagina'] = 500  # Valor padrão para tamanhoPagina
+        page_size = params['tamanhoPagina']
+    else:
+        # Para outros endpoints que não usam tamanhoPagina
+        # Define um valor fixo apenas para controle do loop
+        page_size = 100  # Valor aproximado para controle interno
 
-    # Verifica se os parâmetros obrigatórios estão presentes
-    if 'dataVigenciaInicialMin' not in params and 'dataVigenciaInicialMax' not in params:
-        raise ValueError("Os parâmetros 'dataVigenciaInicialMin' e 'dataVigenciaInicialMax' são obrigatórios.")
-
+    # Se nenhum parâmetro for fornecido, usa parâmetros padrão básicos
+    if params is None:
+        params = {'tamanhoPagina': 500, 'pagina': 1}
+    
+    # Verifica se tamanhoPagina está presente (obrigatório para cálculo de páginas)
+    if 'tamanhoPagina' not in params:
+        params['tamanhoPagina'] = 500  # Valor padrão para tamanhoPagina
+    
     all_data = []
     total_records = 0
-    max_pages = (max_records // params['tamanhoPagina']) + 1 # Quantas páginas serão necessárias para atingir o max_records
+    max_pages = (max_records // page_size) + 1 # Quantas páginas serão necessárias para atingir o max_records
     # OBS sobre o +1: caso o resultado da divisão seja não exata, será pego mais uma página para garantir que todos os registros foram pegos
 
     print(f"Iniciando extração de {endpoint}...")
@@ -69,8 +88,13 @@ def extract_data(url, endpoint, max_records=10000, params=None, max_retries=3):
                 print(f"{records_count} registros obtidos (Total: {total_records})")
 
                 # Verificar se chegamos ao fim dos dados (página não completa)
-                if records_count < params_copy['tamanhoPagina']:
-                    print("última página alcançada.")
+                # Para contratos, verifica com base no tamanhoPagina
+                if endpoint == endpoint_contratos and records_count < params_copy['tamanhoPagina']:
+                    print("Última página alcançada.")
+                    return all_data
+                # Para outros endpoints, verifica se recebemos menos que a estimativa
+                elif endpoint != endpoint_contratos and records_count < page_size:
+                    print("Última página alcançada.")
                     return all_data
                 
                 # Pausa curta para evitar sobrecarga na API
@@ -109,29 +133,96 @@ def save_to_csv(data, filename, directory=data_dir):
     return df
 
 def extract_contratos(max_records=10000, save=True):
+    params = {
+    'tamanhoPagina': 500, #min é 10; max é 500
+    'dataVigenciaInicialMin': '2024-01-01',
+    'dataVigenciaInicialMax': '2024-12-31',
+    }
+
+    # Verifica se os parâmetros obrigatórios estão presentes para o endpoint de contratos
+    if 'dataVigenciaInicialMin' not in params or 'dataVigenciaInicialMax' not in params:
+        raise ValueError("Os parâmetros 'dataVigenciaInicialMin' e 'dataVigenciaInicialMax' são obrigatórios para o endpoint de contratos.")
+    
     # Extrai dados de contratos e retorna um DataFrame
     timestamp = datetime.now().strftime('%Y-%m-%d')
-    contratos_data = extract_data(url, endpoint_contratos, max_records)
+    contratos_data = extract_data(url, endpoint_contratos, max_records, params=params)
 
     if save:
         return save_to_csv(contratos_data, f"contratos_{timestamp}.csv")
     return pd.DataFrame(contratos_data)
 
-def extract_contratos_itens(max_records=10000, save=True):
-    # Extrai dados de itens de contratos e retorna um DataFrame
-    timestamp = datetime.now().strftime('%Y-%m-%d')
-    contratos_itens_data = extract_data(url, endpoint_contratos_itens, max_records)
+def extract_uasg(max_records=None, save=True):
+    """
+    Extrai todos os dados de UASGs.
+    
+    Args:
+        max_records: Limite máximo de registros (None para todos os registros)
+        save: Se True, salva os dados em CSV
+    """
+    params = {
+    'statusUasg': 'true',
+    }
 
+    # Verifica se os parâmetros obrigatórios estão presentes para o endpoint de UASG
+    if 'statusUasg' not in params:
+        raise ValueError("O parâmetro 'statusUasg' é obrigatório para o endpoint de UASG.")
+
+    # Define um limite muito alto para pegar todos os registros (caso max_records=None)
+    if max_records is None:
+        max_records = 1000000  # Um número muito alto para capturar todos os registros
+        
+    # Extrai dados de Unidades Administrativas de Serviços Gerais (UASG)
+    timestamp = datetime.now().strftime('%Y-%m-%d')
+    uasg_data = extract_data(url, endpoint_uasg, max_records, params=params)
+    
     if save:
-        return save_to_csv(contratos_itens_data, f"contratos_itens_{timestamp}.csv")
-    return pd.DataFrame(contratos_itens_data)
+        return save_to_csv(uasg_data, f"uasg_{timestamp}.csv")
+    return pd.DataFrame(uasg_data)
+
+def extract_orgao(max_records=None, save=True):
+    """
+    Extrai todos os dados de Órgãos.
+    
+    Args:
+        max_records: Limite máximo de registros (None para todos os registros)
+        save: Se True, salva os dados em CSV
+    """
+    params = {
+    'statusOrgao': 'true',
+    }
+
+    # Verifica se os parâmetros obrigatórios estão presentes para o endpoint de Órgão
+    if 'statusOrgao' not in params:
+        raise ValueError("O parâmetro 'statusOrgao' é obrigatório para o endpoint de Órgão.")
+        
+    # Define um limite muito alto para pegar todos os registros (caso max_records=None)
+    if max_records is None:
+        max_records = 1000000  # Um número muito alto para capturar todos os registros
+
+    # Extrai dados de Órgãos
+    timestamp = datetime.now().strftime('%Y-%m-%d')
+    orgao_data = extract_data(url, endpoint_orgao, max_records, params=params)
+    
+    if save:
+        return save_to_csv(orgao_data, f"orgao_{timestamp}.csv")
+    return pd.DataFrame(orgao_data)
 
 # Execução direta para testes
 if __name__ == "__main__":
-    # Teste com número reduzido de registros
-    contratos_df = extract_contratos(max_records=1000)
-    itens_df = extract_contratos_itens(max_records=1000)
-
-    print("\nResumo da extração de teste:")
-    print(f"Contratos: {len(contratos_df):,} registros")
-    print(f"Itens de Contratos: {len(itens_df):,} registros")
+    # Definir os limites de registros para testes
+    # Usar None para extrair todos os registros disponíveis
+    limite_contratos = 100
+    limite_uasg = 100
+    limite_orgao = 100
+    
+    print("Iniciando extração de dados...")
+    
+    # Extração  dos dados com os limites definidos
+    contratos_df = extract_contratos(max_records=limite_contratos)
+    uasg_df = extract_uasg(max_records=limite_uasg)
+    orgao_df = extract_orgao(max_records=limite_orgao)
+    
+    print("\nResumo da extração:")
+    print(f"Contratos: {len(contratos_df):,} registros (limite: {limite_contratos})")
+    print(f"UASGs: {len(uasg_df):,} registros (limite: {limite_uasg if limite_uasg else 'todos'})")
+    print(f"Órgãos: {len(orgao_df):,} registros (limite: {limite_orgao if limite_orgao else 'todos'})")

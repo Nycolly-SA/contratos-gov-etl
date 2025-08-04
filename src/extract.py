@@ -115,30 +115,7 @@ def extract_data(url, endpoint, max_records=10000, params=None, max_retries=3):
     print(f"Extração concluída: {total_records} registros obtidos.")
     return all_data
 
-def save_to_csv(data, filename, directory=data_dir):
-    """
-    Salva os dados em um arquivo CSV e retorna o DataFrame
-    
-    Args:
-        data: Lista de dicionários ou DataFrame a ser salvo
-        filename: Nome do arquivo CSV (sem extensão)
-        directory: Diretório onde o arquivo será salvo
-    """
-    # Verifica se os dados já estão em um DataFrame ou se precisam ser convertidos
-    if isinstance(data, pd.DataFrame):
-        df = data
-    else:
-        # Se for uma lista vazia ou None
-        if not data:
-            print(f"Nenhum dado para salvar em {filename}")
-            return pd.DataFrame()
-        df = pd.DataFrame(data)
-    
-    file_path = directory / filename
-    df.to_csv(file_path, index=False, encoding='utf-8')
-    print(f"Dados salvos em {file_path} ({len(df)} registros)")
-    return df
-
+# OBS: Esta função não está sendo usada no fluxo principal, mas pode ser útil para extrações simples
 def extract_contratos_simples(max_records=10000, save=True):
     """
     Extrai dados de contratos sem estratificação temporal.
@@ -289,6 +266,30 @@ def extract_orgao(max_records=None, save=True):
     if save:
         return save_to_csv(orgao_data, f"orgao_{timestamp}.csv")
     return pd.DataFrame(orgao_data)
+
+def save_to_csv(data, filename, directory=data_dir):
+    """
+    Salva os dados em um arquivo CSV e retorna o DataFrame
+    
+    Args:
+        data: Lista de dicionários ou DataFrame a ser salvo
+        filename: Nome do arquivo CSV (sem extensão)
+        directory: Diretório onde o arquivo será salvo
+    """
+    # Verifica se os dados já estão em um DataFrame ou se precisam ser convertidos
+    if isinstance(data, pd.DataFrame):
+        df = data
+    else:
+        # Se for uma lista vazia ou None
+        if not data:
+            print(f"Nenhum dado para salvar em {filename}")
+            return pd.DataFrame()
+        df = pd.DataFrame(data)
+    
+    file_path = directory / filename
+    df.to_csv(file_path, index=False, encoding='utf-8')
+    print(f"Dados salvos em {file_path} ({len(df)} registros)")
+    return df
 
 # Execução direta para testes
 if __name__ == "__main__":

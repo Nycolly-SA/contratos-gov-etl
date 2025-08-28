@@ -16,14 +16,14 @@ def main():
     
     # Extraindo dados de contratos estratificados por trimestre
     print("\n>> Extraindo dados de contratos com amostragem por trimestre...")
-    contratos_por_trimestre = 3000  # 3.000 contratos por trimestre (total: 12.000)
+    contratos_por_trimestre = 3000
     df_contratos = extract_contratos_por_trimestre(contratos_por_trimestre=contratos_por_trimestre, save=True)
     
     # Extraindo todos os dados de UASG e Órgãos
     print("\n>> Extraindo dados de UASGs...")
-    df_uasg = extract_uasg(max_records=None, save=True)
+    df_uasg = extract_uasg(max_pages=None, save=True)
     print("\n>> Extraindo dados de Órgãos...")
-    df_orgao = extract_orgao(max_records=None, save=True)
+    df_orgao = extract_orgao(max_pages=None, save=True)
 
     fim_extracao = time.time()
     tempo_extracao = round((fim_extracao - inicio_extracao) / 60, 2)

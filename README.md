@@ -1,81 +1,65 @@
-# Pipeline ETL - ComprasNet (ComprasGov)
+# Pipeline ETL para Contratos Governamentais
 
-Este projeto implementa um **pipeline ETL (Extract, Transform, Load)** para coleta, tratamento e análise de dados públicos do portal [ComprasGov](https://dadosabertos.compras.gov.br/).  
+Este projeto implementa um pipeline ETL (Extract, Transform, Load) para dados de contratos públicos disponibilizados pelo Portal de Compras Governamentais do Brasil.
 
-O objetivo é simular um fluxo de dados real, extraindo contratos e seus itens, transformando-os e carregando-os em um banco de dados, para posterior análise em dashboards interativos (via **Streamlit**).
+## 📊 Sobre o Projeto
 
----
+O objetivo deste projeto é extrair, transformar e analisar dados de contratos públicos, proporcionando insights sobre gastos governamentais, distribuição de contratos entre órgãos e análises temporais.
 
-## 📌 Estrutura do Projeto
+## 🔍 Fase de Extração
 
+### Fontes de Dados
+Os dados são extraídos da API de Dados Abertos do Portal de Compras Governamentais através de três endpoints principais:
+- **Contratos**: Informações detalhadas sobre contratos públicos
+- **UASGs (Unidades Administrativas de Serviços Gerais)**: Unidades operacionais
+- **Órgãos**: Entidades governamentais responsáveis pelos contratos
 
----
+### Estratégia de Amostragem
+Para lidar com o grande volume de contratos disponíveis (mais de 170 mil registros apenas em 2024), implementei uma estratégia de **amostragem estratificada por trimestre**:
 
-## 🚀 Pipeline ETL
+1. **Representatividade Temporal**: Extraí 3.000 contratos de cada trimestre (total de 12.000), garantindo representatividade ao longo do ano
+2. **Cobertura Completa**: Para UASGs e órgãos, extraí conjuntos completos de dados
 
-### 1. **Extract**  
-A etapa de extração utiliza a **API do ComprasGov**.  
-- Extração dos **contratos por trimestre**, com filtros de data configuráveis.  
-- Limite de **10.000 contratos por extração** (restrição da API).  
-- Para cada contrato, são coletados também os **itens** relacionados.  
-- Contratos com **mais de 500 itens** são descartados para evitar truncamento de dados.  
-- Contratos **sem itens** também são descartados.  
+### Estrutura da Extração
 
-Endpoints utilizados:  
-- [`consultarContratos`](https://dadosabertos.compras.gov.br/swagger-ui/index.html#/Contratos/consultarContratos)  
-- [`consultarContratosItens`](https://dadosabertos.compras.gov.br/swagger-ui/index.html#/Contratos/consultarContratosItens)  
-- [`uasg`](https://dadosabertos.compras.gov.br/swagger-ui/index.html#/UASG/uasg)  
-- [`orgao`](https://dadosabertos.compras.gov.br/swagger-ui/index.html#/Orgao/orgao)  
+```
+src/
+  ├── extract.py      # Módulo de extração
+  ├── main.py         # Pipeline principal
+  └── ...
+data/
+  └── raw/            # Dados brutos extraídos da API
+```
 
-> 🔧 Os parâmetros de ano e quantidade por trimestre podem ser ajustados conforme a necessidade.
+### Detalhes de Implementação
 
----
+- **Paginação**: Implementei um sistema robusto para lidar com a paginação da API (500 registros por página)
+- **Tratamento de Erros**: Desenvolvi um mecanismo de retry para lidar com falhas temporárias da API
+- **Verificação de Distribuição**: Adicionei validação automática da distribuição de contratos por trimestre
 
-### 2. **Transform** *(em desenvolvimento)*  
-- Limpeza e padronização de colunas (datas, valores monetários, textos).  
-- Criação de tabelas dimensionais para facilitar análises.  
+## 🛠️ Como Executar
 
----
+```bash
+# Clonar o repositório
+git clone https://github.com/Nycolly-SA/contratos-gov-etl.git
+cd contratos-gov-etl
 
-### 3. **Load** *(em desenvolvimento)*  
-- Carregamento em banco de dados relacional (PostgreSQL).  
-- Organização em modelo relacional para consultas analíticas.  
+# Instalar dependências
+pip install -r requirements.txt
 
----
+# Executar o pipeline
+python src/main.py
+```
 
-## 📊 Futuras Análises
+## 📁 Estrutura dos Dados
 
-Após a conclusão das etapas de transformação e carga, os dados serão utilizados em dashboards interativos no **Streamlit**, com KPIs voltados para:  
-- Custos por órgão/entidade.  
-- Volume de contratos por período.  
-- Distribuição de itens contratados.  
-- Comparação entre UASGs.  
+A extração gera três arquivos CSV principais:
+- `contratos_amostra_YYYY-MM-DD.csv`: Contratos estratificados por trimestre
+- `uasg_YYYY-MM-DD.csv`: Dados completos de UASGs
+- `orgao_YYYY-MM-DD.csv`: Dados completos de órgãos
 
----
+## 🔜 Próximas Etapas
 
-## ⚠️ Observações Importantes
-
-- A API do ComprasGov sofre atualizações constantes:  
-  - Alguns registros são **excluídos ou adicionados** ao longo do tempo.  
-  - Isso pode fazer com que o total de registros extraídos varie.  
-- Esses pontos estão documentados para garantir **transparência** na reprodução do pipeline.  
-
----
-
-## 🔧 Tecnologias Utilizadas
-
-- **Python 3.12+**  
-- **Pandas**  
-- **Requests**  
-- **PostgreSQL** *(planejado)*  
-- **Streamlit** *(planejado)*  
-
----
-
-## 📌 Próximos Passos
-
-- Finalizar a etapa de transformação.  
-- Implementar carga no banco de dados.  
-- Criar dashboard em Streamlit para análises.  
-
----
+- Implementação das fases de transformação e carregamento
+- Análises e visualizações dos dados
+- Dashboard interativo para exploração dos dados

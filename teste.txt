@@ -1,0 +1,85 @@
+## 📊 Pipeline ETL + Análise de Dados (Contratos Governamentais)
+
+VER.1 
+Este projeto implementa um **pipeline ETL (Extract, Transform, Load)** para coleta, tratamento e análise de dados públicos do portal ([Dados Abertos](https://dados.gov.br/home)
+
+VER.1.1
+O objetivo é simular um fluxo de dados real, extraindo contratos e seus itens, transformando-os e carregando-os em um banco de dados, para posterior análise em dashboards interativos (via **Streamlit**).
+
+VER.1.2
+O objetivo é simular um fluxo de dados real, extraindo contratos e informações complementares, tratando e carregando-os em banco de dados para posterior análise.
+
+
+VER.2
+Este projeto implementa um pipeline ETL (Extract, Transform, Load) para dados de contratos governamentais disponibilizados pela API pública ComprasGov ([Dados Abertos](https://dados.gov.br/home) do Governo Brasileiro).
+
+O foco inicial está na extração e organização dos contratos públicos do ano de 2024, com posterior transformação, carga e análise.
+
+### Informações Gerais
+#### 🔧 Tecnologias Utilizadas
+- **Python 3.12+**  
+- **Pandas**  
+- **Requests**  
+- **PostgreSQL** *(planejado)*  
+- **Streamlit** *(planejado)*  
+#### 🔗 Fontes de Dados
+- Postman Docs -> https://documenter.getpostman.com/view/13166820/2sA3XJjPpR?utm_source=chatgpt.com#
+- Swagger UI -> https://dadosabertos.compras.gov.br/swagger-ui/index.html?utm_source=chatgpt.com#
+
+#### 📁 Estrutura do Projeto
+````
+src/
+ ├── extract.py       # Módulo de extração (funções para API)
+ ├── main.py          # Orquestração do pipeline
+ └── transform.py     # (em construção) Funções de transformação
+data/
+ └── raw/             # Dados brutos extraídos em CSV
+````
+
+#### 🚀 Como Executar
+````
+# 1. Clonar o repositório
+git clone https://github.com/SEU-USUARIO/contratos-gov-etl.git
+cd contratos-gov-etl
+
+# 2. Instalar dependências
+pip install -r requirements.txt
+
+# 3. Executar o pipeline
+python src/main.py
+````
+
+## ⚙️ Pipeline
+
+### 🔍 Extração
+A etapa de extração utiliza 3 endpoints principais da API:
+1. `1_consultarContratos`
+- Retorna informações detalhadas sobre contratos (número, objeto, vigência, órgãos participantes, etc.).
+- É o endpoint principal do projeto.
+- Estratégia adotada:
+- Para evitar viés e respeitar limites da API (500 registros/página), foi feita amostragem estratificada por trimestre.
+- Por padrão, cada trimestre retorna até 5.000 contratos, totalizando cerca de 20.000 contratos.
+- O ano de referência (ex.: 2024) e o número de contratos por trimestre são parâmetros configuráveis no código, podendo ser ajustados conforme a necessidade do usuário.
+
+2. `1_consultarUasg`
+- Fornece informações sobre as UASGs (Unidades Administrativas de Serviços Gerais).
+- Tentou-se inicialmente extrair apenas UASGs vinculadas aos contratos, mas a API só aceita consulta de um registro por vez → inviável.
+- Solução adotada: extrair todas as UASGs e filtrar posteriormente na transformação.
+- Observação: este endpoint sofre alterações frequentes (UASGs sendo criadas, ativadas ou desativadas).
+
+3. `2_consultarOrgao`
+- Retorna dados sobre os órgãos governamentais responsáveis pelos contratos.
+- Situação semelhante ao endpoint de UASG: consulta unitária inviável.
+- Solução adotada: extrair todos os órgãos e filtrar depois.
+- Observação: este endpoint também sofre alterações ao longo do tempo (órgãos sendo ativados/desativados).
+
+#### 📂 Estrutura de Saída (Extração)
+- `contratos_amostra_YYYY-MM-DD.csv` → Amostra estratificada de contratos (por trimestre)
+- `uasg_YYYY-MM-DD.csv` → Dados completos de UASGs
+- `orgao_YYYY-MM-DD.csv` → Dados completos de órgãos
+
+### 🔜 Próximas Etapas
+- Finalizar a fase de Transformação (limpeza, padronização, filtragem dos dados de UASG e órgãos).
+- Implementar a fase de Carga (armazenamento em banco de dados relacional).
+- Realizar análises exploratórias e criação de KPIs.
+- Construir dashboard interativo para visualização.

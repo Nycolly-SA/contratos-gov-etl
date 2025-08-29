@@ -1,0 +1,213 @@
+==================================================
+15:33:51 | INFO   | INICIANDO PIPELINE ETL - 2025-08-29 15:33:51
+==================================================
+
+15:33:51 | INFO   | === FASE DE EXTRAÇÃO ===
+15:33:51 | INFO   | >>> Extraindo dados de contratos com amostragem por trimestre...
+15:33:51 | INFO   | >> Iniciando extração: 5000 contratos por trimestre do ano 2024
+15:33:51 | INFO   | -> Extraindo contratos de 2024-01-01 até 2024-03-31
+15:33:51 | INFO   | Iniciando extração de modulo-contratos/1_consultarContratos...
+15:33:51 | INFO   | Página 1: 500 registros (Total: 500)
+15:33:53 | INFO   | Página 2: 500 registros (Total: 1000)
+15:33:55 | INFO   | Página 3: 500 registros (Total: 1500)
+15:33:57 | INFO   | Página 4: 500 registros (Total: 2000)
+15:33:59 | INFO   | Página 5: 500 registros (Total: 2500)
+15:34:01 | INFO   | Página 6: 500 registros (Total: 3000)
+15:34:03 | INFO   | Página 7: 500 registros (Total: 3500)
+15:34:05 | INFO   | Página 8: 500 registros (Total: 4000)
+15:34:07 | INFO   | Página 9: 500 registros (Total: 4500)
+15:34:09 | INFO   | Página 10: 500 registros (Total: 5000)
+15:34:09 | INFO   | Limite de 5000 registros atingido.
+15:34:09 | INFO   | Trimestre 2024-01-01 a 2024-03-31: 5000 contratos extraídos   
+15:34:09 | INFO   | -> Extraindo contratos de 2024-04-01 até 2024-06-30
+15:34:09 | INFO   | Iniciando extração de modulo-contratos/1_consultarContratos...
+15:34:10 | INFO   | Página 1: 500 registros (Total: 500)
+15:34:12 | INFO   | Página 2: 500 registros (Total: 1000)
+15:34:14 | INFO   | Página 3: 500 registros (Total: 1500)
+15:34:16 | INFO   | Página 4: 500 registros (Total: 2000)
+15:34:18 | INFO   | Página 5: 500 registros (Total: 2500)
+15:34:21 | INFO   | Página 6: 500 registros (Total: 3000)
+15:34:23 | INFO   | Página 7: 500 registros (Total: 3500)
+15:34:25 | INFO   | Página 8: 500 registros (Total: 4000)
+15:34:28 | INFO   | Página 9: 500 registros (Total: 4500)
+15:34:30 | INFO   | Página 10: 500 registros (Total: 5000)
+15:34:31 | INFO   | Limite de 5000 registros atingido.
+15:34:31 | INFO   | Trimestre 2024-04-01 a 2024-06-30: 5000 contratos extraídos   
+15:34:31 | INFO   | -> Extraindo contratos de 2024-07-01 até 2024-09-30
+15:34:31 | INFO   | Iniciando extração de modulo-contratos/1_consultarContratos...
+15:34:31 | INFO   | Página 1: 500 registros (Total: 500)
+15:34:34 | INFO   | Página 2: 500 registros (Total: 1000)
+15:34:37 | INFO   | Página 3: 500 registros (Total: 1500)
+15:34:39 | INFO   | Página 4: 500 registros (Total: 2000)
+15:34:42 | INFO   | Página 5: 500 registros (Total: 2500)
+15:34:44 | INFO   | Página 6: 500 registros (Total: 3000)
+15:34:47 | INFO   | Página 7: 500 registros (Total: 3500)
+15:34:51 | INFO   | Página 8: 500 registros (Total: 4000)
+15:34:54 | INFO   | Página 9: 500 registros (Total: 4500)
+15:34:57 | INFO   | Página 10: 500 registros (Total: 5000)
+15:34:58 | INFO   | Limite de 5000 registros atingido.
+15:34:58 | INFO   | Trimestre 2024-07-01 a 2024-09-30: 5000 contratos extraídos
+15:34:58 | INFO   | -> Extraindo contratos de 2024-10-01 até 2024-12-31
+15:34:58 | INFO   | Iniciando extração de modulo-contratos/1_consultarContratos...
+15:34:59 | INFO   | Página 1: 500 registros (Total: 500)
+15:35:02 | INFO   | Página 2: 500 registros (Total: 1000)
+15:35:05 | INFO   | Página 3: 500 registros (Total: 1500)
+15:35:08 | INFO   | Página 4: 500 registros (Total: 2000)
+15:35:11 | INFO   | Página 5: 500 registros (Total: 2500)
+15:35:15 | INFO   | Página 6: 500 registros (Total: 3000)
+15:35:18 | INFO   | Página 7: 500 registros (Total: 3500)
+15:35:21 | INFO   | Página 8: 500 registros (Total: 4000)
+15:35:25 | INFO   | Página 9: 500 registros (Total: 4500)
+15:35:28 | INFO   | Página 10: 500 registros (Total: 5000)
+15:35:29 | INFO   | Limite de 5000 registros atingido.
+15:35:29 | INFO   | Trimestre 2024-10-01 a 2024-12-31: 5000 contratos extraídos
+15:35:29 | INFO   | 
+Distribuição por trimestre:
+15:35:29 | INFO   | Trimestre 1: 5000 contratos
+15:35:29 | INFO   | Trimestre 2: 5000 contratos
+15:35:29 | INFO   | Trimestre 3: 5000 contratos
+15:35:29 | INFO   | Trimestre 4: 5000 contratos
+15:35:29 | INFO   | Total: 20000 contratos
+15:35:29 | INFO   | Dados salvos em data\raw\contratos_amostra_2025-08-29.csv (20000 registros)
+
+15:35:29 | INFO   | >>> Extraindo todos os dados de UASGs...
+15:35:29 | INFO   | Iniciando extração de UASGs...
+15:35:29 | INFO   | Iniciando extração de modulo-uasg/1_consultarUasg...
+15:35:29 | INFO   | Página 1: 500 registros (Total: 500)
+15:35:30 | INFO   | Página 2: 500 registros (Total: 1000)
+15:35:31 | INFO   | Página 3: 500 registros (Total: 1500)
+15:35:32 | INFO   | Página 4: 500 registros (Total: 2000)
+15:35:33 | INFO   | Página 5: 500 registros (Total: 2500)
+15:35:33 | INFO   | Página 6: 500 registros (Total: 3000)
+15:35:34 | INFO   | Página 7: 500 registros (Total: 3500)
+15:35:35 | INFO   | Página 8: 500 registros (Total: 4000)
+15:35:36 | INFO   | Página 9: 500 registros (Total: 4500)
+15:35:37 | INFO   | Página 10: 500 registros (Total: 5000)
+15:35:38 | INFO   | Página 11: 500 registros (Total: 5500)
+15:35:38 | INFO   | Página 12: 500 registros (Total: 6000)
+15:35:39 | INFO   | Página 13: 500 registros (Total: 6500)
+15:35:40 | INFO   | Página 14: 500 registros (Total: 7000)
+15:35:41 | INFO   | Página 15: 500 registros (Total: 7500)
+15:35:42 | INFO   | Página 16: 500 registros (Total: 8000)
+15:35:42 | INFO   | Página 17: 500 registros (Total: 8500)
+15:35:43 | INFO   | Página 18: 500 registros (Total: 9000)
+15:35:44 | INFO   | Página 19: 500 registros (Total: 9500)
+15:35:45 | INFO   | Página 20: 500 registros (Total: 10000)
+15:35:46 | INFO   | Página 21: 500 registros (Total: 10500)
+15:35:47 | INFO   | Página 22: 500 registros (Total: 11000)
+15:35:47 | INFO   | Página 23: 500 registros (Total: 11500)
+15:35:48 | INFO   | Página 24: 500 registros (Total: 12000)
+15:35:49 | INFO   | Página 25: 500 registros (Total: 12500)
+15:35:50 | INFO   | Página 26: 500 registros (Total: 13000)
+15:35:51 | INFO   | Página 27: 500 registros (Total: 13500)
+15:35:52 | INFO   | Página 28: 500 registros (Total: 14000)
+15:35:52 | INFO   | Página 29: 500 registros (Total: 14500)
+15:35:53 | INFO   | Página 30: 500 registros (Total: 15000)
+15:35:54 | INFO   | Página 31: 500 registros (Total: 15500)
+15:35:55 | INFO   | Página 32: 500 registros (Total: 16000)
+15:35:56 | INFO   | Página 33: 500 registros (Total: 16500)
+15:35:56 | INFO   | Página 34: 500 registros (Total: 17000)
+15:35:57 | INFO   | Página 35: 500 registros (Total: 17500)
+15:35:58 | INFO   | Página 36: 500 registros (Total: 18000)
+15:35:59 | INFO   | Página 37: 500 registros (Total: 18500)
+15:36:00 | INFO   | Página 38: 500 registros (Total: 19000)
+15:36:01 | INFO   | Página 39: 500 registros (Total: 19500)
+15:36:01 | INFO   | Página 40: 500 registros (Total: 20000)
+15:36:02 | INFO   | Página 41: 500 registros (Total: 20500)
+15:36:03 | INFO   | Página 42: 500 registros (Total: 21000)
+15:36:04 | INFO   | Página 43: 142 registros (Total: 21142)
+15:36:04 | INFO   | Última página alcançada.
+15:36:04 | INFO   | Extração concluída: 21142 UASGs
+15:36:04 | INFO   | Dados salvos em data\raw\uasg_2025-08-29.csv (21142 registros)
+
+15:36:04 | INFO   | >>> Extraindo todos os dados de Órgãos...
+15:36:04 | INFO   | Iniciando extração de órgãos...
+15:36:04 | INFO   | Iniciando extração de modulo-uasg/2_consultarOrgao...
+15:36:04 | INFO   | Página 1: 500 registros (Total: 500)
+15:36:05 | INFO   | Página 2: 500 registros (Total: 1000)
+15:36:06 | INFO   | Página 3: 500 registros (Total: 1500)
+15:36:07 | INFO   | Página 4: 500 registros (Total: 2000)
+15:36:08 | INFO   | Página 5: 500 registros (Total: 2500)
+15:36:09 | INFO   | Página 6: 500 registros (Total: 3000)
+15:36:10 | INFO   | Página 7: 500 registros (Total: 3500)
+15:36:10 | INFO   | Página 8: 500 registros (Total: 4000)
+15:36:11 | INFO   | Página 9: 500 registros (Total: 4500)
+15:36:12 | INFO   | Página 10: 500 registros (Total: 5000)
+15:36:13 | INFO   | Página 11: 500 registros (Total: 5500)
+15:36:14 | INFO   | Página 12: 500 registros (Total: 6000)
+15:36:15 | INFO   | Página 13: 500 registros (Total: 6500)
+15:36:16 | INFO   | Página 14: 500 registros (Total: 7000)
+15:36:17 | INFO   | Página 15: 500 registros (Total: 7500)
+15:36:17 | INFO   | Página 16: 500 registros (Total: 8000)
+15:36:18 | INFO   | Página 17: 500 registros (Total: 8500)
+15:36:19 | INFO   | Página 18: 500 registros (Total: 9000)
+15:36:21 | INFO   | Página 19: 500 registros (Total: 9500)
+15:36:22 | INFO   | Página 20: 500 registros (Total: 10000)
+15:36:23 | INFO   | Página 21: 111 registros (Total: 10111)
+15:36:23 | INFO   | Última página alcançada.
+15:36:23 | INFO   | Extração concluída: 10111 órgãos
+15:36:23 | INFO   | Dados salvos em data\raw\orgao_2025-08-29.csv (10111 registros)
+
+15:36:23 | INFO   | === RESUMO DA EXTRAÇÃO ===
+15:36:23 | INFO   | Contratos: 20,000 registros (amostra estratificada por trimestre)
+
+15:36:23 | INFO   | Distribuição de contratos por trimestre:
+15:36:23 | INFO   | Trimestre 1: 5,000 contratos
+15:36:23 | INFO   | Trimestre 2: 5,000 contratos
+15:36:23 | INFO   | Trimestre 3: 5,000 contratos
+15:36:23 | INFO   | Trimestre 4: 5,000 contratos
+15:36:23 | INFO   | Colunas: codigoCategoria, codigoModalidadeCompra, codigoOrgao, codigoSubcategoria, codigoTipo, codigoUnidadeGestora, codigoUnidadeGestoraOrigemContrato, codigoUnidadeRealizadoraCompra, contratoExcluido, dataHoraExclusao...
+15:36:23 | INFO   | UASGs: 21,142 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: adesaoSiasg, cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, cnpjCpfUasg, codigoMunicipio, codigoMunicipioIbge, codigoOrgao, codigoSiorg, codigoUasg...
+15:36:23 | INFO   | Órgãos: 10,111 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, codigoOrgao, codigoOrgaoSuperior, codigoOrgaoVinculado, codigoTipoAdministracao, dataHoraMovime
+
+15:36:23 | INFO   | === RESUMO DA EXTRAÇÃO ===
+15:36:23 | INFO   | Contratos: 20,000 registros (amostra estratificada por trimestre)
+
+15:36:23 | INFO   | Distribuição de contratos por trimestre:
+15:36:23 | INFO   | Trimestre 1: 5,000 contratos
+15:36:23 | INFO   | Trimestre 2: 5,000 contratos
+15:36:23 | INFO   | Trimestre 3: 5,000 contratos
+15:36:23 | INFO   | Trimestre 4: 5,000 contratos
+15:36:23 | INFO   | Colunas: codigoCategoria, codigoModalidadeCompra, codigoOrgao, codigoSubcategoria, codigoTipo, codigoUnidadeGestora, codigoUnidadeGestoraOrigemContrato, codigoUnidadeRealizadoraCompra, contratoExcluido, dataHoraExclusao...
+15:36:23 | INFO   | UASGs: 21,142 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: adesaoSiasg, cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, cnpjCpfUasg, codigoMunicipio, codigoMunicipioIbge, codigoOrgao, codigoSiorg, codigoUasg...
+15:36:23 | INFO   | Órgãos: 10,111 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, codigoOrgao, codigoOrgaoSuperior, codigoOrgaoVinculado, codigoTipoAdministracao, dataHoraMovime15:36:23 | INFO   | Distribuição de contratos por trimestre:
+15:36:23 | INFO   | Trimestre 1: 5,000 contratos
+15:36:23 | INFO   | Trimestre 2: 5,000 contratos
+15:36:23 | INFO   | Trimestre 3: 5,000 contratos
+15:36:23 | INFO   | Trimestre 4: 5,000 contratos
+15:36:23 | INFO   | Colunas: codigoCategoria, codigoModalidadeCompra, codigoOrgao, codigoSubcategoria, codigoTipo, codigoUnidadeGestora, codigoUnidadeGestoraOrigemContrato, codigoUnidadeRealizadoraCompra, contratoExcluido, dataHoraExclusao...
+15:36:23 | INFO   | UASGs: 21,142 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: adesaoSiasg, cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, cnpjCpfUasg, codigoMunicipio, codigoMunicipioIbge, codigoOrgao, codigoSiorg, codigoUasg...
+15:36:23 | INFO   | Órgãos: 10,111 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, codigoOrgao, codigoOrgaoSuperior, codigoOrgaoVinculado, codigoTipoAdministracao, dataHoraMovime15:36:23 | INFO   | Trimestre 3: 5,000 contratos
+15:36:23 | INFO   | Trimestre 4: 5,000 contratos
+15:36:23 | INFO   | Colunas: codigoCategoria, codigoModalidadeCompra, codigoOrgao, codigoSubcategoria, codigoTipo, codigoUnidadeGestora, codigoUnidadeGestoraOrigemContrato, codigoUnidadeRealizadoraCompra, contratoExcluido, dataHoraExclusao...
+15:36:23 | INFO   | UASGs: 21,142 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: adesaoSiasg, cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, cnpjCpfUasg, codigoMunicipio, codigoMunicipioIbge, codigoOrgao, codigoSiorg, codigoUasg...
+15:36:23 | INFO   | Órgãos: 10,111 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, codigoOrgao, codigoOrgaoSuperior, codigoOrgaoVinculado, codigoTipoAdministracao, dataHoraMovime15:36:23 | INFO   | Colunas: codigoCategoria, codigoModalidadeCompra, codigoOrgao, codigoSubcategoria, codigoTipo, codigoUnidadeGestora, codigoUnidadeGestoraOrigemContrato, codigoUnidadeRealizadoraCompra, contratoExcluido, dataHoraExclusao...
+15:36:23 | INFO   | UASGs: 21,142 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: adesaoSiasg, cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, cnpjCpfUasg, codigoMunicipio, codigoMunicipioIbge, codigoOrgao, codigoSiorg, codigoUasg...
+15:36:23 | INFO   | Órgãos: 10,111 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, codigoOrgao, codigoOrgaoSuperior, codigoOrgaoVinculado, codigoTipoAdministracao, dataHoraMovimeoUasg...
+15:36:23 | INFO   | Órgãos: 10,111 registros (todos disponíveis)
+15:36:23 | INFO   | Colunas: cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, codigoOrgao, codigoOrgaoSuperior, codigoOrgaoVinculado, codigoTipoAdministracao, dataHoraMovime15:36:23 | INFO   | Colunas: cnpjCpfOrgao, cnpjCpfOrgaoSuperior, cnpjCpfOrgaoVinculado, codigoOrgao, codigoOrgaoSuperior, codigoOrgaoVinculado, codigoTipoAdministracao, dataHoraMovimento, esfera, nomeMnemonicoOrgao...
+
+15:36:23 | INFO   | Tempo de extração: 2.53 minutos
+15:36:23 | INFO   | === Extração concluída com sucesso! ===
+
+15:36:23 | INFO   | === FASE DE TRANSFORMAÇÃO ===
+Dados processados salvos em: data\processed\contratos_limpos_2025-08-29.csv (20000 registros)
+15:36:23 | INFO   | Tempo de transformação: 0.01 minutos
+15:36:23 | INFO   | === Transformação concluída com sucesso! ===
+
+==================================================
+15:36:23 | INFO   | PIPELINE ETL CONCLUÍDO - 2025-08-29 15:36:23
+15:36:23 | INFO   | ==================================================
+15:36:23 | INFO   | Tempo total de processamento: 2.54 minutos
+15:36:23 | INFO   | - Extração: 2.53 minutos
+15:36:23 | INFO   | ==================================================
